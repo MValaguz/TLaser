@@ -39,8 +39,8 @@ print('Max data in tabella oracle...' + str(v_data_exe_precedente))
 #Select dati laser da sqlite (attenzione al fatto che è duplicata a seconda se data presente)
 if v_data_exe_precedente == None:
     v_sqlite_cur.execute("SELECT Name, Properties, CreatedAt FROM ObjectInfo")                                
-else:    
-    v_sqlite_cur.execute("SELECT Name, Properties, CreatedAt FROM ObjectInfo WHERE CreatedAt > '" + str(v_data_exe_precedente) + "'")                                
+else:        
+    v_sqlite_cur.execute("SELECT Name, Properties, CreatedAt FROM ObjectInfo WHERE CreatedAt > datetime( '" + str(v_data_exe_precedente) + "')")                                
 
 #Scorro le righe....
 print('Trasferimento in corso...')
