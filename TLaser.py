@@ -42,15 +42,15 @@ if v_data_exe_precedente == None:
 else:    
     v_sqlite_cur.execute("SELECT Name, Properties, CreatedAt FROM ObjectInfo WHERE CreatedAt > '" + str(v_data_exe_precedente) + "'")                                
 
-# Scorro le righe....
+#Scorro le righe....
 print('Trasferimento in corso...')
 v_righe = 0
 for row in v_sqlite_cur:
-    # Scorro le colonne di ogni riga
+    #Conto le righe
     v_righe += 1    
-    # Splitto il campo proprietà che contiene lo spessore, x, y e l'area
+    #Splitto il campo proprietà che contiene lo spessore, x, y e l'area
     v_split = str(row[1]).split('|')
-    # Scrivo la riga
+    #Scrivo la riga
     v_insert = "INSERT INTO bystronicparts(NAME, SPESSORE, X, Y, AREA, CREATEDAT) VALUES('"
     v_insert += row[0] 
     v_insert += "'," + v_split[2] 
@@ -60,8 +60,10 @@ for row in v_sqlite_cur:
     v_insert +=  ",TO_TIMESTAMP('" + str(row[2]) + "','RRRR-MM-DD HH24:MI:SS,FF9'))"
     v_oracle_cursor.execute( v_insert )        
     
+#Chiudo tutto
 v_oracle_cursor.execute('COMMIT')
 v_oracle_db.close()
 v_sqlite_conn.close()
 
+#Stampo risultato
 print('..trasferite ' + str(v_righe) + ' righe.')
