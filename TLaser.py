@@ -50,15 +50,19 @@ for row in v_sqlite_cur:
     v_righe += 1    
     #Splitto il campo proprietà che contiene lo spessore, x, y e l'area
     v_split = str(row[1]).split('|')
-    #Scrivo la riga
-    v_insert = "INSERT INTO bystronicparts(NAME, SPESSORE, X, Y, AREA, CREATEDAT) VALUES('"
-    v_insert += row[0] 
-    v_insert += "'," + v_split[2] 
-    v_insert +=  "," + v_split[3]
-    v_insert +=  "," + v_split[4]
-    v_insert +=  "," + v_split[7]
-    v_insert +=  ",TO_TIMESTAMP('" + str(row[2]) + "','RRRR-MM-DD HH24:MI:SS,FF9'))"
-    v_oracle_cursor.execute( v_insert )        
+    if len(v_split) < 7:
+        print('Errore in split su riga: ' + str(row[0]) + ' - ' + str(row[1]) )
+    else:
+        #Scrivo la riga
+        v_insert = "INSERT INTO bystronicparts(NAME, SPESSORE, X, Y, AREA, CREATEDAT) VALUES('"
+        v_insert += row[0] 
+        v_insert += "'," + v_split[2] 
+        v_insert +=  "," + v_split[3]
+        v_insert +=  "," + v_split[4]
+        v_insert +=  "," + v_split[7]
+        #alla data sommo un secondo perché oracle ha una precisione fino a 3 decimali dei centemisi di secondo mentre sqlite di 5!
+        v_insert +=  ",TO_TIMESTAMP('" + str(row[2]) + "','RRRR-MM-DD HH24:MI:SS,FF9')+0.00001)"
+        v_oracle_cursor.execute( v_insert )        
     
 #Chiudo tutto
 v_oracle_cursor.execute('COMMIT')
